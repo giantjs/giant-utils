@@ -1,17 +1,17 @@
 {
     "name"           : "giant-utils",
-    "version"        : "0.0.4",
+    "version"        : "0.0.3",
     "description"    : "Utils module for Giant",
     "keywords"       : [
         "utils",
         "string"
     ],
     "author"         : "Dan Stocker <dan@kwaia.com>",
-    "copyright"      : "Copyright (c) 2012-2015 Dan Stocker",
+    "copyright"      : "Copyright (c) 2015 Dan Stocker",
     "license"        : "MIT",
     "repository"     : {
         "type": "git",
-        "url" : "git@github.com:giantjs/giant-data.git"
+        "url" : "git@github.com:giantjs/giant-utils.git"
     },
     "dependencies"   : {
         "giant-assertion": "0.0.3",
