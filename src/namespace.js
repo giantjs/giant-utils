@@ -9,6 +9,12 @@ if (typeof require === 'function') {
 }
 
 /**
+ * @namespace
+ * @see https://github.com/kriskowal/q
+ */
+var Q = Q || require('q', 'Q');
+
+/**
  * Native string class.
  * @name String
  * @class

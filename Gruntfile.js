@@ -6,6 +6,8 @@ module.exports = function (grunt) {
         files: [
             'src/namespace.js',
             'src/StringUtils.js',
+            'src/Array.js',
+            'src/Debouncer.js',
             'src/exports.js'
         ],
 
