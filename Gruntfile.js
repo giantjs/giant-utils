@@ -5,6 +5,8 @@ module.exports = function (grunt) {
     var params = {
         files: [
             'src/namespace.js',
+            'src/Stringifiable.js',
+            'src/Stringifier.js',
             'src/StringUtils.js',
             'src/Array.js',
             'src/Debouncer.js',
