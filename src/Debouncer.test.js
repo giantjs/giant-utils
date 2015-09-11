@@ -5,11 +5,11 @@
     module("Debouncer");
 
     test("Instantiation", function () {
-        raises(function () {
+        throws(function () {
             giant.Debouncer.create();
         }, "should raise exception on missing argument");
 
-        raises(function () {
+        throws(function () {
             giant.Debouncer.create('foo');
         }, "should raise exception on invalid argument");
 
