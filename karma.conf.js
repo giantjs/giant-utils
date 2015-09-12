@@ -11,9 +11,9 @@ module.exports = function (config) {
 
         // list of files / patterns to load in the browser
         files: [
-            'node_modules/giant-namespace/giant-namespace.js',
-            'node_modules/giant-assertion/giant-assertion.js',
-            'node_modules/giant-oop/giant-oop.js',
+            'node_modules/giant-namespace/lib/giant-namespace.js',
+            'node_modules/giant-assertion/lib/giant-assertion.js',
+            'node_modules/giant-oop/lib/giant-oop.js',
             'config/giant-oop-test.config.js',
             'node_modules/q/q.js',
 

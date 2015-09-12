@@ -1,0 +1,15 @@
+{
+  "main": {
+    "assets": {
+      "js": [
+        "src/namespace.js",
+        "src/Stringifiable.def.js",
+        "src/Stringifier.def.js",
+        "src/StringUtils.def.js",
+        "src/Array.def.js",
+        "src/Debouncer.def.js",
+        "src/exports.js"
+      ]
+    }
+  }
+}
