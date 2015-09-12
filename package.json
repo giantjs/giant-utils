@@ -21,7 +21,7 @@
   },
   "devDependencies": {},
   "files": [
-    "giant-utils.js"
+    "lib"
   ],
-  "main": "giant-utils.js"
+  "main": "lib/giant-utils.js"
 }
