@@ -47,7 +47,7 @@ giant.postpone(giant, 'Debouncer', function () {
              * @ignore
              */
             init: function (originalFunction) {
-                giant.isFunction(originalFunction, "Invalid original function");
+                $assertion.isFunction(originalFunction, "Invalid original function");
 
                 /**
                  * Function to be de-bounced.
