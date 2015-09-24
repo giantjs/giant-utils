@@ -1,4 +1,4 @@
-/*global giant */
+/*global $utils */
 (function () {
     "use strict";
 

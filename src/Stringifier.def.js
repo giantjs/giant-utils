@@ -1,5 +1,5 @@
-/*global giant */
-$oop.postpone(giant, 'Stringifier', function () {
+/*global $utils */
+$oop.postpone($utils, 'Stringifier', function () {
     "use strict";
 
     var base = $oop.Base,
@@ -11,8 +11,8 @@ $oop.postpone(giant, 'Stringifier', function () {
      * @class
      * @extends $oop.Base
      */
-    giant.Stringifier = self
-        .addMethods(/** @lends giant.Stringifier# */{
+    $utils.Stringifier = self
+        .addMethods(/** @lends $utils.Stringifier# */{
             /**
              * @param {*} [stringifiable]
              * @returns {string}

@@ -1,4 +1,4 @@
-/*global giant */
+/*global $utils */
 (function () {
     "use strict";
 
@@ -6,17 +6,17 @@
 
     test("Instantiation", function () {
         throws(function () {
-            giant.Debouncer.create();
+            $utils.Debouncer.create();
         }, "should raise exception on missing argument");
 
         throws(function () {
-            giant.Debouncer.create('foo');
+            $utils.Debouncer.create('foo');
         }, "should raise exception on invalid argument");
 
         function originalFunction() {
         }
 
-        var debounced = giant.Debouncer.create(originalFunction);
+        var debounced = $utils.Debouncer.create(originalFunction);
 
         strictEqual(debounced.originalFunction, originalFunction, "should set originalFunction property to argument");
         ok(debounced.hasOwnProperty('debounceTimer'), "should add debounceTimer property");
@@ -32,7 +32,7 @@
 
         var debouncer = foo.toDebouncer();
 
-        ok(debouncer.isA(giant.Debouncer), "should return Debouncer instance");
+        ok(debouncer.isA($utils.Debouncer), "should return Debouncer instance");
         strictEqual(debouncer.originalFunction, foo, "should set originalFunction property");
     });
 

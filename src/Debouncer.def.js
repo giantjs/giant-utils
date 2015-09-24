@@ -1,6 +1,6 @@
-/*global giant, Q */
+/*global $utils, Q */
 /*jshint browser:true, node:true */
-$oop.postpone(giant, 'Debouncer', function () {
+$oop.postpone($utils, 'Debouncer', function () {
     "use strict";
 
     var base = $oop.Base,
@@ -8,10 +8,10 @@ $oop.postpone(giant, 'Debouncer', function () {
         slice = Array.prototype.slice;
 
     /**
-     * @name giant.Debouncer.create
+     * @name $utils.Debouncer.create
      * @function
      * @param {function} originalFunction Function to debounce
-     * @returns {giant.Debouncer}
+     * @returns {$utils.Debouncer}
      */
 
     /**
@@ -21,8 +21,8 @@ $oop.postpone(giant, 'Debouncer', function () {
      * @class
      * @extends $oop.Base
      */
-    giant.Debouncer = self
-        .addPrivateMethods(/** @lends giant.Debouncer# */{
+    $utils.Debouncer = self
+        .addPrivateMethods(/** @lends $utils.Debouncer# */{
             /**
              * @param {function} func
              * @param {number} delay
@@ -41,7 +41,7 @@ $oop.postpone(giant, 'Debouncer', function () {
                 return clearTimeout(timer);
             }
         })
-        .addMethods(/** @lends giant.Debouncer# */{
+        .addMethods(/** @lends $utils.Debouncer# */{
             /**
              * @param {function} originalFunction Function to debounce
              * @ignore
@@ -113,10 +113,10 @@ $oop.postpone(giant, 'Debouncer', function () {
     $oop.extendBuiltIn(Function.prototype, /** @lends Function# */{
         /**
          * Converts `Function` to `Debouncer` instance.
-         * @returns {giant.Debouncer}
+         * @returns {$utils.Debouncer}
          */
         toDebouncer: function () {
-            return giant.Debouncer.create(this);
+            return $utils.Debouncer.create(this);
         }
     });
 }());
