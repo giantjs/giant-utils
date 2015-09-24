@@ -1,6 +1,6 @@
 {
   "name": "giant-utils",
-  "version": "0.0.7",
+  "version": "0.1.0",
   "description": "Utils module for Giant",
   "keywords": [
     "utils",
@@ -14,9 +14,9 @@
     "url": "git@github.com:giantjs/giant-utils.git"
   },
   "dependencies": {
-    "giant-assertion": "0.0.7",
-    "giant-namespace": "0.0.7",
-    "giant-oop": "0.0.7",
+    "giant-assertion": "0.1.0",
+    "giant-namespace": "0.1.0",
+    "giant-oop": "0.1.0",
     "q": "^1.4.1"
   },
   "devDependencies": {
