@@ -6,9 +6,8 @@ var giant = giant || require('giant-namespace');
 /** @namespace */
 var $assertion = $assertion || require('giant-assertion');
 
-if (typeof require === 'function') {
-    require('giant-oop');
-}
+/** @namespace */
+var $oop = $oop || require('giant-oop');
 
 /**
  * @namespace

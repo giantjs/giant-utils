@@ -1,13 +1,13 @@
 /*global giant */
-giant.postpone(giant, 'StringUtils', function () {
+$oop.postpone(giant, 'StringUtils', function () {
     "use strict";
 
-    var base = giant.Base,
+    var base = $oop.Base,
         self = base.extend();
 
     /**
      * @class
-     * @extends giant.Base
+     * @extends $oop.Base
      */
     giant.StringUtils = self
         .addMethods(/** @lends giant.StringUtils */{

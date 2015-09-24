@@ -1,9 +1,9 @@
 /*global giant, Q */
 /*jshint browser:true, node:true */
-giant.postpone(giant, 'Debouncer', function () {
+$oop.postpone(giant, 'Debouncer', function () {
     "use strict";
 
-    var base = giant.Base,
+    var base = $oop.Base,
         self = base.extend(),
         slice = Array.prototype.slice;
 
@@ -19,7 +19,7 @@ giant.postpone(giant, 'Debouncer', function () {
      * and replaced by subsequent calls being made within the specified time frame.
      * When no new calls were made in the specified time frame, the last call will go through.
      * @class
-     * @extends giant.Base
+     * @extends $oop.Base
      */
     giant.Debouncer = self
         .addPrivateMethods(/** @lends giant.Debouncer# */{
@@ -110,7 +110,7 @@ giant.postpone(giant, 'Debouncer', function () {
 (function () {
     "use strict";
 
-    giant.extendBuiltIn(Function.prototype, /** @lends Function# */{
+    $oop.extendBuiltIn(Function.prototype, /** @lends Function# */{
         /**
          * Converts `Function` to `Debouncer` instance.
          * @returns {giant.Debouncer}

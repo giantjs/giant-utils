@@ -2,7 +2,7 @@
 (function () {
     "use strict";
 
-    giant.extendBuiltIn(Array.prototype, /** @lends Array# */{
+    $oop.extendBuiltIn(Array.prototype, /** @lends Array# */{
         /**
          * URI encodes all items of an array.
          * @returns {string[]} Array of URI-encoded strings

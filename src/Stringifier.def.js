@@ -1,15 +1,15 @@
 /*global giant */
-giant.postpone(giant, 'Stringifier', function () {
+$oop.postpone(giant, 'Stringifier', function () {
     "use strict";
 
-    var base = giant.Base,
+    var base = $oop.Base,
         self = base.extend();
 
     /**
      * Serializes variables. Returns strings unchanged, converts numbers and booleans to string,
      * calls .toString() on Objects, returns empty string for undefined, null, and functions.
      * @class
-     * @extends giant.Base
+     * @extends $oop.Base
      */
     giant.Stringifier = self
         .addMethods(/** @lends giant.Stringifier# */{
