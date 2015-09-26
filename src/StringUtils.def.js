@@ -1,4 +1,3 @@
-/*global $utils */
 $oop.postpone($utils, 'StringUtils', function () {
     "use strict";
 

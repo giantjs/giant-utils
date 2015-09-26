@@ -1,4 +1,3 @@
-/*global $utils, Q */
 /*jshint browser:true, node:true */
 $oop.postpone($utils, 'Debouncer', function () {
     "use strict";
