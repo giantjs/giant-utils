@@ -28,17 +28,19 @@ $oop.postpone($utils, 'Deferred', function () {
              * @returns {$utils.Deferred}
              */
             resolve: function () {
-                var that = this,
-                    args = arguments,
+                var deferredArguments = arguments,
                     promise = this.promise;
 
                 if (promise.status === $utils.Promise.PROMISE_STATE_UNFULFILLED) {
                     // setting status
                     promise.status = $utils.Promise.PROMISE_STATE_FULFILLED;
 
+                    // storing arguments
+                    promise.deferredArguments = deferredArguments;
+
                     // calling success handlers
                     promise.successHandlers.forEach(function (handler) {
-                        handler.apply(that, args);
+                        handler.apply(promise, deferredArguments);
                     });
                 }
 
@@ -49,17 +51,19 @@ $oop.postpone($utils, 'Deferred', function () {
              * @returns {$utils.Deferred}
              */
             reject: function () {
-                var that = this,
-                    args = arguments,
+                var deferredArguments = arguments,
                     promise = this.promise;
 
                 if (promise.status === $utils.Promise.PROMISE_STATE_UNFULFILLED) {
                     // setting status
                     promise.status = $utils.Promise.PROMISE_STATE_FAILED;
 
+                    // storing arguments
+                    promise.deferredArguments = deferredArguments;
+
                     // calling failure handlers
                     promise.failureHandlers.forEach(function (handler) {
-                        handler.apply(that, args);
+                        handler.apply(promise, deferredArguments);
                     });
                 }
 
@@ -70,14 +74,13 @@ $oop.postpone($utils, 'Deferred', function () {
              * @returns {$utils.Deferred}
              */
             notify: function () {
-                var that = this,
-                    args = arguments,
+                var args = arguments,
                     promise = this.promise;
 
                 if (promise.status === $utils.Promise.PROMISE_STATE_UNFULFILLED) {
                     // calling progress handlers
                     promise.progressHandlers.forEach(function (handler) {
-                        handler.apply(that, args);
+                        handler.apply(promise, args);
                     });
                 }
 

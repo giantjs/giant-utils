@@ -1,6 +1,8 @@
 (function () {
     "use strict";
 
+    var slice = Array.prototype.slice;
+
     module("Deferred");
 
     test("Instantiation", function () {
@@ -33,6 +35,8 @@
         ], "should call success handlers");
 
         equal(deferred.promise.status, $utils.Promise.PROMISE_STATE_FULFILLED, "should set status to fulfilled");
+        deepEqual(slice.call(deferred.promise.deferredArguments), ['foo', 'bar'],
+            "should set deferredArguments property on promise");
     });
 
     test("Rejection", function () {
@@ -59,6 +63,8 @@
         ], "should call failure handlers");
 
         equal(deferred.promise.status, $utils.Promise.PROMISE_STATE_FAILED, "should set status to failed");
+        deepEqual(slice.call(deferred.promise.deferredArguments), ['foo', 'bar'],
+            "should set deferredArguments property on promise");
     });
 
     test("Notification", function () {
