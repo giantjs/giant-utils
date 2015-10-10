@@ -10,9 +10,11 @@
         "src/promise/Thenable.def.js",
         "src/promise/Deferred.def.js",
         "src/promise/Promise.def.js",
+        "src/async/Timer.def.js",
+        "src/async/Timeout.def.js",
+        "src/async/Interval.def.js",
         "src/async/Async.def.js",
         "src/async/Debouncer.def.js",
-        "src/async/Timeout.def.js",
         "src/behavior/Documented.def.js",
         "src/behavior/Managed.def.js",
         "src/exports.js"

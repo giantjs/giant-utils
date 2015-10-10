@@ -20,6 +20,16 @@ $oop.postpone($utils, 'Async', function () {
              */
             _setTimeoutProxy: function (callback, delay) {
                 return setTimeout.apply(null, arguments);
+            },
+
+            /**
+             * @param {function} callback
+             * @param {number} delay
+             * @returns {number}
+             * @private
+             */
+            _setIntervalProxy: function (callback, delay) {
+                return setInterval.apply(null, arguments);
             }
         })
         .addMethods(/** @lends $utils.Async */{
@@ -46,6 +56,31 @@ $oop.postpone($utils, 'Async', function () {
                 }
 
                 deferred.notify(timeout);
+
+                return deferred.promise;
+            },
+
+            /**
+             * Runs function asynchronously, at each delay milliseconds until cleared.
+             * Similar to window.setInterval, except that it returns a promise
+             * that is rejected when the interval timer is cleared, and is notified
+             * at each interval cycle.
+             * @param {function} callback
+             * @param {number} delay
+             * @returns {$utils.Promise} Rejection receives no arguments, progress
+             * receives callback return value.
+             */
+            setInterval: function (callback, delay) {
+                var args = [intervalCallback].concat(slice.call(arguments, 1)),
+                    interval = this._setIntervalProxy.apply(this, args).toInterval(),
+                    deferred = interval.deferred;
+
+                function intervalCallback() {
+                    // invoking callback and resolving promise with return value
+                    deferred.notify(interval, callback.apply(null, arguments));
+                }
+
+                deferred.notify(interval);
 
                 return deferred.promise;
             }
