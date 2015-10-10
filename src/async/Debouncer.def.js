@@ -27,7 +27,7 @@ $oop.postpone($utils, 'Debouncer', function () {
              * @ignore
              */
             init: function (callback) {
-                $assertion.isFunction(callback, "Invalid original function");
+                $assertion.isFunction(callback, "Invalid callback");
 
                 /**
                  * Function to be de-bounced.
