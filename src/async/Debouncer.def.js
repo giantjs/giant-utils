@@ -9,7 +9,7 @@ $oop.postpone($utils, 'Debouncer', function () {
     /**
      * @name $utils.Debouncer.create
      * @function
-     * @param {function} originalFunction Function to debounce
+     * @param {function} callback Function to debounce
      * @returns {$utils.Debouncer}
      */
 
@@ -21,87 +21,70 @@ $oop.postpone($utils, 'Debouncer', function () {
      * @extends $oop.Base
      */
     $utils.Debouncer = self
-        .addPrivateMethods(/** @lends $utils.Debouncer# */{
-            /**
-             * @param {function} func
-             * @param {number} delay
-             * @returns {number}
-             * @private
-             */
-            _setTimeoutProxy: function (func, delay) {
-                return setTimeout(func, delay);
-            },
-
-            /**
-             * @param {number} timer
-             * @private
-             */
-            _clearTimeoutProxy: function (timer) {
-                return clearTimeout(timer);
-            }
-        })
         .addMethods(/** @lends $utils.Debouncer# */{
             /**
-             * @param {function} originalFunction Function to debounce
+             * @param {function} callback Function to debounce
              * @ignore
              */
-            init: function (originalFunction) {
-                $assertion.isFunction(originalFunction, "Invalid original function");
+            init: function (callback) {
+                $assertion.isFunction(callback, "Invalid original function");
 
                 /**
                  * Function to be de-bounced.
                  * @type {function}
                  */
-                this.originalFunction = originalFunction;
+                this.callback = callback;
 
                 /**
-                 * Internal timer identifier for the de-bounce process.
-                 * @type {number}
+                 * @type {$utils.Timeout}
                  */
-                this.debounceTimer = undefined;
+                this.timeout = undefined;
 
                 /**
-                 * Internal deferred object that gets resolved when the de-bounce sequence completes.
-                 * @type {Q.Deferred}
+                 * @type {$utils.Timeout}
                  */
-                this.debounceDeferred = undefined;
+                this.deferred = undefined;
             },
 
             /**
              * Runs the original function de-bounced with the specified delay.
              * @param {number} [delay]
-             * @returns {Q.Promise}
+             * @returns {$utils.Promise}
              */
             runDebounced: function (delay) {
                 delay = delay || 0;
 
-                var debounceTimer = this.debounceTimer;
-
-                if (debounceTimer) {
-                    // clearing previous timeout
-                    this._clearTimeoutProxy(debounceTimer);
+                if (this.timeout) {
+                    // there is already a timeout in progress
+                    this.timeout.clearTimeout();
                 }
 
-                if (!this.debounceDeferred) {
-                    // creating deferred object for new debounce sequence
-                    this.debounceDeferred = Q.defer();
+                if (!this.deferred) {
+                    this.deferred = $utils.Deferred.create();
                 }
 
                 var that = this,
-                    args = slice.call(arguments, 1);
+                    args = [this.callback, delay].concat(slice.call(arguments, 1));
 
-                this.debounceTimer = this._setTimeoutProxy(function () {
-                    var debounceDeferred = that.debounceDeferred;
+                $utils.Async.setTimeout.apply($utils.Async, args)
+                    .then(function (value) {
+                        // timeout completed
+                        var deferred = that.deferred;
 
-                    // clearing debouncer state
-                    that.debounceTimer = undefined;
-                    that.debounceDeferred = undefined;
+                        // re-setting debouncer state
+                        that.deferred = undefined;
+                        that.timeout = undefined;
 
-                    // calling original function and fulfilling promise
-                    debounceDeferred.resolve(that.originalFunction.apply(that, args));
-                }, delay);
+                        deferred.resolve(value);
+                    }, function () {
+                        // timeout got canceled due to new call to the debouncer
+                        that.deferred.notify();
+                    }, function (timeout) {
+                        // new timeout started
+                        that.timeout = timeout;
+                    });
 
-                return this.debounceDeferred.promise;
+                return this.deferred.promise;
             }
         });
 });

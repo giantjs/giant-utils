@@ -12,17 +12,18 @@
             $utils.Debouncer.create('foo');
         }, "should raise exception on invalid argument");
 
-        function originalFunction() {
+        function callback() {
         }
 
-        var debounced = $utils.Debouncer.create(originalFunction);
+        var debounced = $utils.Debouncer.create(callback);
 
-        strictEqual(debounced.originalFunction, originalFunction, "should set originalFunction property to argument");
-        ok(debounced.hasOwnProperty('debounceTimer'), "should add debounceTimer property");
-        equal(typeof debounced.debounceTimer, 'undefined',
-            "should set debounceTimer property to undefined");
-        equal(typeof debounced.debounceDeferred, 'undefined',
-            "should set debounceDeferred property to undefined");
+        strictEqual(debounced.callback, callback,
+            "should set callback property to argument");
+        ok(debounced.hasOwnProperty('timeout'), "should add timeout property");
+        equal(typeof debounced.timeout, 'undefined',
+            "should set timeout property to undefined");
+        equal(typeof debounced.deferred, 'undefined',
+            "should set deferred property to undefined");
     });
 
     test("Conversion from function", function () {
@@ -32,30 +33,27 @@
         var debouncer = foo.toDebouncer();
 
         ok(debouncer.isA($utils.Debouncer), "should return Debouncer instance");
-        strictEqual(debouncer.originalFunction, foo, "should set originalFunction property");
+        strictEqual(debouncer.callback, foo, "should set callback property");
     });
 
-    asyncTest("Debounced call", function () {
+    test("Debounced call", function (assert) {
         expect(6);
 
-        var result = {};
+        var result = {},
+            done = assert.async();
 
         function foo() {
             var args = Array.prototype.slice.call(arguments);
             deepEqual(args, ['world'],
                 "should call debounced method eventually and pass arguments of last call");
-            equal(typeof debouncer.debounceTimer, 'undefined',
-                "should clear debounceTimer before calling original function");
-            equal(typeof debouncer.debounceDeferred, 'undefined',
-                "should clear debounceDeferred before calling original function");
             return result;
         }
 
         var debouncer = foo.toDebouncer();
 
         debouncer.runDebounced(100, 'hello')
-            .then(function () {
-                ok(true, "should resolve promise for skipped call");
+            .then(null, null, function () {
+                ok(true, "should notify promise for skipped call");
             });
 
         debouncer.runDebounced(200, 'world')
@@ -63,9 +61,11 @@
                 ok(true, "should resolve promise for last call");
                 strictEqual(value, result,
                     "should resolve with value returned by original function");
-            })
-            .finally(function () {
-                start();
+                equal(typeof debouncer.timeout, 'undefined',
+                    "should clear timeout before calling original function");
+                equal(typeof debouncer.deferred, 'undefined',
+                    "should clear deferred before calling original function");
+                done();
             });
     });
 }());
