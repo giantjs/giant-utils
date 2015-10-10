@@ -7,7 +7,12 @@
         "src/Stringifier.def.js",
         "src/StringUtils.def.js",
         "src/Array.def.js",
-        "src/Debouncer.def.js",
+        "src/promise/Thenable.def.js",
+        "src/promise/Deferred.def.js",
+        "src/promise/Promise.def.js",
+        "src/async/Async.def.js",
+        "src/async/Debouncer.def.js",
+        "src/async/Timeout.def.js",
         "src/exports.js"
       ]
     }
