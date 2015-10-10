@@ -78,6 +78,9 @@ $oop.postpone($utils, 'Deferred', function () {
                     promise = this.promise;
 
                 if (promise.status === $utils.Promise.PROMISE_STATE_UNFULFILLED) {
+                    // storing arguments
+                    promise.notificationArguments.push(args);
+
                     // calling progress handlers
                     promise.progressHandlers.forEach(function (handler) {
                         handler.apply(promise, args);

@@ -45,6 +45,11 @@ $oop.postpone($utils, 'Promise', function () {
                 this.deferredArguments = undefined;
 
                 /**
+                 * @type {Arguments[]}
+                 */
+                this.notificationArguments = [];
+
+                /**
                  * @type {function[]}
                  */
                 this.successHandlers = [];
@@ -91,7 +96,13 @@ $oop.postpone($utils, 'Promise', function () {
 
                 if (progressHandler) {
                     if (this.status === self.PROMISE_STATE_UNFULFILLED) {
+                        // adding progress handler to list of handlers
                         this.progressHandlers.push(progressHandler);
+
+                        // passing previous notifications to new handler
+                        this.notificationArguments.forEach(function (args) {
+                            progressHandler.apply(this, args);
+                        });
                     }
                 }
 

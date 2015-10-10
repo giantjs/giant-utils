@@ -83,6 +83,11 @@
             });
 
         strictEqual(deferred.notify('foo', 'bar'), deferred, "should be chainable");
+        deepEqual(deferred.promise.notificationArguments.map(function (args) {
+            return slice.call(args);
+        }), [
+            ['foo', 'bar']
+        ], "should add arguments to notificationArguments property on promise");
 
         deepEqual(results, [
             ['1', 'foo', 'bar'],

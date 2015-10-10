@@ -1,6 +1,8 @@
 (function () {
     "use strict";
 
+    var slice = Array.prototype.slice;
+
     module("Promise");
 
     test("Instantiation", function () {
@@ -55,6 +57,23 @@
         promise.then(null, function (value) {
             equal(value, 'foo', "should invoke success handler");
         });
+    });
+
+    test("Chaining to notified promise", function () {
+        var promise = $utils.Deferred.create()
+                .notify('foo')
+                .notify('bar', 'baz')
+                .promise,
+            args = [];
+
+        promise.then(null, null, function () {
+            args.push(slice.call(arguments));
+        });
+
+        deepEqual(args, [
+            ['foo'],
+            ['bar', 'baz']
+        ], "should invoke notification handlers");
     });
 
     test("Resolving non-promises", function () {
