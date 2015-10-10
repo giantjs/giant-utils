@@ -6,19 +6,23 @@
     test("Instantiation", function () {
         throws(function () {
             $utils.Debouncer.create();
-        }, "should raise exception on missing argument");
+        }, "should raise exception on missing arguments");
 
         throws(function () {
             $utils.Debouncer.create('foo');
-        }, "should raise exception on invalid argument");
+        }, "should raise exception on invalid callback argument");
+
+        throws(function () {
+            $utils.Debouncer.create(callback, 'foo');
+        }, "should raise exception on invalid delay argument");
 
         function callback() {
         }
 
-        var debounced = $utils.Debouncer.create(callback);
+        var debounced = $utils.Debouncer.create(callback, 10);
 
-        strictEqual(debounced.callback, callback,
-            "should set callback property to argument");
+        strictEqual(debounced.callback, callback, "should set callback property");
+        equal(debounced.delay, 10, "should set delay property");
         ok(debounced.hasOwnProperty('timeout'), "should add timeout property");
         equal(typeof debounced.timeout, 'undefined',
             "should set timeout property to undefined");
@@ -30,10 +34,11 @@
         function foo() {
         }
 
-        var debouncer = foo.toDebouncer();
+        var debouncer = foo.toDebouncer(5);
 
         ok(debouncer.isA($utils.Debouncer), "should return Debouncer instance");
         strictEqual(debouncer.callback, foo, "should set callback property");
+        equal(debouncer.delay, 5, "should set delay property");
     });
 
     test("Debounced call", function (assert) {
@@ -49,14 +54,14 @@
             return result;
         }
 
-        var debouncer = foo.toDebouncer();
+        var debouncer = foo.toDebouncer(10);
 
-        debouncer.runDebounced(100, 'hello')
+        debouncer.runDebounced('hello')
             .then(null, null, function () {
                 ok(true, "should notify promise for skipped call");
             });
 
-        debouncer.runDebounced(200, 'world')
+        debouncer.runDebounced('world')
             .then(function (value) {
                 ok(true, "should resolve promise for last call");
                 strictEqual(value, result,

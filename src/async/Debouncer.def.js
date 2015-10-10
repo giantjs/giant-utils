@@ -10,6 +10,7 @@ $oop.postpone($utils, 'Debouncer', function () {
      * @name $utils.Debouncer.create
      * @function
      * @param {function} callback Function to debounce
+     * @param {number} [delay=0] Number of milliseconds between debounced calls
      * @returns {$utils.Debouncer}
      */
 
@@ -24,16 +25,24 @@ $oop.postpone($utils, 'Debouncer', function () {
         .addMethods(/** @lends $utils.Debouncer# */{
             /**
              * @param {function} callback Function to debounce
+             * @param {number} [delay=0] Number of milliseconds between debounced calls
              * @ignore
              */
-            init: function (callback) {
-                $assertion.isFunction(callback, "Invalid callback");
+            init: function (callback, delay) {
+                $assertion
+                    .isFunction(callback, "Invalid callback")
+                    .isNumberOptional(delay, "Invalid delay");
 
                 /**
                  * Function to be de-bounced.
                  * @type {function}
                  */
                 this.callback = callback;
+
+                /**
+                 * @type {number}
+                 */
+                this.delay = delay || 0;
 
                 /**
                  * Takes new value with each delaying call to the debouncer.
@@ -50,13 +59,11 @@ $oop.postpone($utils, 'Debouncer', function () {
             },
 
             /**
-             * Runs the original function de-bounced with the specified delay.
-             * @param {number} [delay]
+             * Schedules running the callback with the specified delay
+             * unless a new debounced call is made in the meantime.
              * @returns {$utils.Promise}
              */
-            runDebounced: function (delay) {
-                delay = delay || 0;
-
+            runDebounced: function () {
                 if (this.timeout) {
                     // there is already a timeout in progress
                     this.timeout.clear();
@@ -67,10 +74,10 @@ $oop.postpone($utils, 'Debouncer', function () {
                 }
 
                 var that = this,
-                    args = [this.callback, delay].concat(slice.call(arguments, 1));
+                    args = [this.callback, this.delay].concat(slice.call(arguments));
 
                 $utils.Async.setTimeout.apply($utils.Async, args)
-                    .then(function (value) {
+                    .then(function () {
                         // timeout completed
                         var deferred = that.deferred;
 
@@ -78,10 +85,11 @@ $oop.postpone($utils, 'Debouncer', function () {
                         that.deferred = undefined;
                         that.timeout = undefined;
 
-                        deferred.resolve(value);
+                        deferred.resolve.apply(deferred, arguments);
                     }, function () {
                         // timeout got canceled due to new call to the debouncer
-                        that.deferred.notify();
+                        var deferred = that.deferred;
+                        deferred.notify.apply(deferred, arguments);
                     }, function (timeout) {
                         // new timeout started
                         that.timeout = timeout;
@@ -98,10 +106,11 @@ $oop.postpone($utils, 'Debouncer', function () {
     $oop.extendBuiltIn(Function.prototype, /** @lends Function# */{
         /**
          * Converts `Function` to `Debouncer` instance.
+         * @param {number} [delay=0]
          * @returns {$utils.Debouncer}
          */
-        toDebouncer: function () {
-            return $utils.Debouncer.create(this);
+        toDebouncer: function (delay) {
+            return $utils.Debouncer.create(this.valueOf(), delay);
         }
     });
 }());
