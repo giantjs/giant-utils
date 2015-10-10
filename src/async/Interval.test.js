@@ -27,7 +27,7 @@
     });
 
     test("Clearing interval timer", function () {
-        expect(3);
+        expect(4);
 
         var interval = (12345).toInterval();
 
@@ -40,9 +40,10 @@
         interval.deferred.promise
             .then(null, function () {
                 ok(true, "should reject promise");
+                equal(arguments[0], 'foo', "should pass clear arguments");
             });
 
-        strictEqual(interval.clear(), interval, "should be chainable");
+        strictEqual(interval.clear('foo'), interval, "should be chainable");
     });
 
     test("Clearing cleared interval timer", function () {

@@ -27,7 +27,7 @@
     });
 
     test("Clearing timeout", function () {
-        expect(3);
+        expect(4);
 
         var timeout = (12345).toTimeout();
 
@@ -40,9 +40,10 @@
         timeout.deferred.promise
             .then(null, function () {
                 ok(true, "should reject promise");
+                ok(arguments[0], 'foo', "should pass clear arguments");
             });
 
-        strictEqual(timeout.clear(), timeout, "should be chainable");
+        strictEqual(timeout.clear('foo'), timeout, "should be chainable");
     });
 
     test("Clearing cleared timeout", function () {

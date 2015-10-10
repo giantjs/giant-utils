@@ -59,7 +59,7 @@ $oop.postpone($utils, 'Timeout', function () {
 
                 if (deferred.promise.status === $utils.Promise.PROMISE_STATE_UNFULFILLED) {
                     this._clearTimeoutProxy(this.timerId);
-                    deferred.reject();
+                    deferred.reject.apply(deferred, arguments);
                 }
 
                 return this;

@@ -60,7 +60,7 @@ $oop.postpone($utils, 'Interval', function () {
 
                 if (deferred.promise.status === $utils.Promise.PROMISE_STATE_UNFULFILLED) {
                     this._clearIntervalProxy(this.timerId);
-                    deferred.reject();
+                    deferred.reject.apply(deferred, arguments);
                 }
 
                 return this;
