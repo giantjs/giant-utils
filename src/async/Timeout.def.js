@@ -5,6 +5,7 @@ $oop.postpone($utils, 'Timeout', function () {
         self = base.extend();
 
     /**
+     * Creates a Timeout instance.
      * @name $utils.Timeout.create
      * @function
      * @param {number} timeoutId
@@ -12,6 +13,8 @@ $oop.postpone($utils, 'Timeout', function () {
      */
 
     /**
+     * Represents a timeout ID with promise capabilities.
+     * Allows to cancel a timeout via window.clearTimeout.
      * @class
      * @extends $oop.Base
      */
@@ -34,6 +37,7 @@ $oop.postpone($utils, 'Timeout', function () {
                 $assertion.isNumber(timeoutId, "Invalud timeout ID");
 
                 /**
+                 * ID associated with timeout. Comes from Async.setTimeout or window.setTimeout.
                  * @type {number}
                  */
                 this.timeoutId = timeoutId;
@@ -45,6 +49,8 @@ $oop.postpone($utils, 'Timeout', function () {
             },
 
             /**
+             * Clears the timeout ID, and rejects the promise.
+             * Clearing an already cleared timeout will have no effect.
              * @returns {$utils.Timeout}
              */
             clearTimeout: function () {
