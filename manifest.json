@@ -13,6 +13,8 @@
         "src/async/Async.def.js",
         "src/async/Debouncer.def.js",
         "src/async/Timeout.def.js",
+        "src/behavior/Documented.def.js",
+        "src/behavior/Managed.def.js",
         "src/exports.js"
       ]
     }
