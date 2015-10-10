@@ -36,11 +36,14 @@ $oop.postpone($utils, 'Debouncer', function () {
                 this.callback = callback;
 
                 /**
+                 * Takes new value with each delaying call to the debouncer.
+                 * Undefined when there's no callback scheduled.
                  * @type {$utils.Timeout}
                  */
                 this.timeout = undefined;
 
                 /**
+                 * Allows the debouncer cycle to be controlled. (From within.)
                  * @type {$utils.Timeout}
                  */
                 this.deferred = undefined;
