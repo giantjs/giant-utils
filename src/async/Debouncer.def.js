@@ -59,7 +59,7 @@ $oop.postpone($utils, 'Debouncer', function () {
 
                 if (this.timeout) {
                     // there is already a timeout in progress
-                    this.timeout.clearTimeout();
+                    this.timeout.clear();
                 }
 
                 if (!this.deferred) {

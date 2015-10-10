@@ -44,7 +44,7 @@
                 ok(true, "should reject promise");
                 done();
             }, function (timeout) {
-                timeout.clearTimeout();
+                timeout.clear();
             });
     });
 }());

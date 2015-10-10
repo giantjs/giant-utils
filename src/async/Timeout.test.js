@@ -14,7 +14,7 @@
 
         var timeout = $utils.Timeout.create(12345);
 
-        equal(timeout.timeoutId, 12345, "should set timeoutId property");
+        equal(timeout.timerId, 12345, "should set timerId property");
         ok(timeout.deferred.isA($utils.Deferred), "should add deferred property");
     });
 
@@ -22,7 +22,7 @@
         var timeout = (12345).toTimeout();
 
         ok(timeout.isA($utils.Timeout), "should return Timeout instance");
-        equal(timeout.timeoutId, 12345, "should set timeoutId property");
+        equal(timeout.timerId, 12345, "should set timerId property");
         ok(timeout.deferred.isA($utils.Deferred), "should add deferred property");
     });
 
@@ -32,8 +32,8 @@
         var timeout = (12345).toTimeout();
 
         timeout.addMocks({
-            _clearTimeoutProxy: function (timeoutId) {
-                equal(timeoutId, timeout.timeoutId, "should clear timeout");
+            _clearTimeoutProxy: function (timerId) {
+                equal(timerId, timeout.timerId, "should clear timeout");
             }
         });
 
@@ -42,14 +42,14 @@
                 ok(true, "should reject promise");
             });
 
-        strictEqual(timeout.clearTimeout(), timeout, "should be chainable");
+        strictEqual(timeout.clear(), timeout, "should be chainable");
     });
 
     test("Clearing cleared timeout", function () {
         expect(0);
 
         var timeout = (12345).toTimeout()
-            .clearTimeout();
+            .clear();
 
         timeout.addMocks({
             _clearTimeoutProxy: function () {
@@ -57,6 +57,6 @@
             }
         });
 
-        timeout.clearTimeout();
+        timeout.clear();
     });
 }());

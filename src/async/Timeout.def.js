@@ -17,6 +17,7 @@ $oop.postpone($utils, 'Timeout', function () {
      * Allows to cancel a timeout via window.clearTimeout.
      * @class
      * @extends $oop.Base
+     * @implements $utils.Timer
      */
     $utils.Timeout = self
         .addPrivateMethods(/** @lends $utils.Timeout# */{
@@ -40,7 +41,7 @@ $oop.postpone($utils, 'Timeout', function () {
                  * ID associated with timeout. Comes from Async.setTimeout or window.setTimeout.
                  * @type {number}
                  */
-                this.timeoutId = timeoutId;
+                this.timerId = timeoutId;
 
                 /**
                  * @type {$utils.Deferred}
@@ -53,11 +54,11 @@ $oop.postpone($utils, 'Timeout', function () {
              * Clearing an already cleared timeout will have no effect.
              * @returns {$utils.Timeout}
              */
-            clearTimeout: function () {
+            clear: function () {
                 var deferred = this.deferred;
 
                 if (deferred.promise.status === $utils.Promise.PROMISE_STATE_UNFULFILLED) {
-                    this._clearTimeoutProxy(this.timeoutId);
+                    this._clearTimeoutProxy(this.timerId);
                     deferred.reject();
                 }
 
