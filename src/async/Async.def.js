@@ -2,7 +2,8 @@ $oop.postpone($utils, 'Async', function () {
     "use strict";
 
     var base = $oop.Base,
-        self = base.extend();
+        self = base.extend(),
+        slice = Array.prototype.slice;
 
     /**
      * Static class for running functions asynchronously.
@@ -18,7 +19,7 @@ $oop.postpone($utils, 'Async', function () {
              * @private
              */
             _setTimeoutProxy: function (callback, delay) {
-                return setTimeout(callback, delay);
+                return setTimeout.apply(null, arguments);
             }
         })
         .addMethods(/** @lends $utils.Async */{
@@ -35,11 +36,14 @@ $oop.postpone($utils, 'Async', function () {
              * @see $utils.Timeout
              */
             setTimeout: function (callback, delay) {
-                var timeout = this._setTimeoutProxy(function () {
-                        // invoking callback and resolving promise with return value
-                        deferred.resolve(callback());
-                    }, delay).toTimeout(),
+                var args = [timeoutCallback].concat(slice.call(arguments, 1)),
+                    timeout = this._setTimeoutProxy.apply(this, args).toTimeout(),
                     deferred = timeout.deferred;
+
+                function timeoutCallback() {
+                    // invoking callback and resolving promise with return value
+                    deferred.resolve(callback.apply(null, arguments));
+                }
 
                 deferred.notify(timeout);
 
