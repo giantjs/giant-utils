@@ -21,7 +21,7 @@
             }
         });
 
-        $utils.Async.setTimeout(foo, 100, 'bar')
+        $utils.Async.setTimeout(foo, 10, 'bar')
             .then(function (value) {
                 strictEqual(value, result, "should resolve promise with return value");
                 $utils.Async.removeMocks();
@@ -39,7 +39,7 @@
         function foo() {
         }
 
-        $utils.Async.setTimeout(foo, 100)
+        $utils.Async.setTimeout(foo, 10)
             .then(null, function () {
                 ok(true, "should reject promise");
                 done();
@@ -68,7 +68,7 @@
             }
         });
 
-        $utils.Async.setInterval(foo, 100, 'bar')
+        $utils.Async.setInterval(foo, 10, 'bar')
             .then(null, function () {
                 ok(true, "should reject promise");
 
