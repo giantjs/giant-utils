@@ -19,13 +19,21 @@
         function callback() {
         }
 
+        $utils.Debouncer.addMocks({
+            start: function () {
+                ok(true, "should start debouncing");
+            }
+        });
+
         var debounced = $utils.Debouncer.create(callback, 10);
+
+        $utils.Debouncer.removeMocks();
 
         strictEqual(debounced.callback, callback, "should set callback property");
         equal(debounced.delay, 10, "should set delay property");
-        ok(debounced.hasOwnProperty('timeout'), "should add timeout property");
-        equal(typeof debounced.timeout, 'undefined',
-            "should set timeout property to undefined");
+        ok(debounced.hasOwnProperty('timer'), "should add timer property");
+        equal(typeof debounced.timer, 'undefined',
+            "should set timer property to undefined");
         equal(typeof debounced.deferred, 'undefined',
             "should set deferred property to undefined");
     });
@@ -56,17 +64,17 @@
 
         var debouncer = foo.toDebouncer(10);
 
-        debouncer.runDebounced('hello')
+        debouncer.schedule('hello')
             .then(null, null, function () {
                 ok(true, "should notify promise for skipped call");
             });
 
-        debouncer.runDebounced('world')
+        debouncer.schedule('world')
             .then(function (value) {
                 ok(true, "should resolve promise for last call");
                 strictEqual(value, result,
                     "should resolve with value returned by original function");
-                equal(typeof debouncer.timeout, 'undefined',
+                equal(typeof debouncer.timer, 'undefined',
                     "should clear timeout before calling original function");
                 equal(typeof debouncer.deferred, 'undefined',
                     "should clear deferred before calling original function");

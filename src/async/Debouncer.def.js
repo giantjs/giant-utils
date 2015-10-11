@@ -15,11 +15,12 @@ $oop.postpone($utils, 'Debouncer', function () {
      */
 
     /**
-     * De-bounces a function. Calls to the specified function via .runDebounced will be ignored
+     * De-bounces a function. Calls to the specified function via .schedule will be ignored
      * and replaced by subsequent calls being made within the specified time frame.
      * When no new calls were made in the specified time frame, the last call will go through.
      * @class
      * @extends $oop.Base
+     * @implements $utils.Scheduler
      */
     $utils.Debouncer = self
         .addMethods(/** @lends $utils.Debouncer# */{
@@ -45,32 +46,47 @@ $oop.postpone($utils, 'Debouncer', function () {
                 this.delay = delay || 0;
 
                 /**
-                 * Takes new value with each delaying call to the debouncer.
-                 * Undefined when there's no callback scheduled.
+                 * Timer instance representing the countdown to the next outgoing call.
+                 * Undefined when the call has been already made.
                  * @type {$utils.Timeout}
                  */
-                this.timeout = undefined;
+                this.timer = undefined;
 
                 /**
-                 * Allows the debouncer cycle to be controlled. (From within.)
-                 * @type {$utils.Timeout}
+                 * Allows the debouncer cycle to be controlled internally.
+                 * @type {$utils.Deferred}
                  */
                 this.deferred = undefined;
+
+                this.start();
+            },
+
+            /**
+             * @returns {$utils.Debouncer}
+             */
+            start: function () {
+                this.deferred = $utils.Deferred.create();
+                return this;
+            },
+
+            /**
+             * @returns {$utils.Debouncer}
+             */
+            stop: function () {
+                this.timer.clear();
+                return this;
             },
 
             /**
              * Schedules running the callback with the specified delay
              * unless a new debounced call is made in the meantime.
+             * TODO: Rename to something uniform.
              * @returns {$utils.Promise}
              */
-            runDebounced: function () {
-                if (this.timeout) {
-                    // there is already a timeout in progress
-                    this.timeout.clear();
-                }
-
-                if (!this.deferred) {
-                    this.deferred = $utils.Deferred.create();
+            schedule: function () {
+                if (this.timer) {
+                    // there is already a timer in progress
+                    this.timer.clear();
                 }
 
                 var that = this,
@@ -78,21 +94,21 @@ $oop.postpone($utils, 'Debouncer', function () {
 
                 $utils.Async.setTimeout.apply($utils.Async, args)
                     .then(function () {
-                        // timeout completed
+                        // timer completed
                         var deferred = that.deferred;
 
                         // re-setting debouncer state
                         that.deferred = undefined;
-                        that.timeout = undefined;
+                        that.timer = undefined;
 
                         deferred.resolve.apply(deferred, arguments);
                     }, function () {
-                        // timeout got canceled due to new call to the debouncer
+                        // timer got canceled due to new call to the debouncer
                         var deferred = that.deferred;
                         deferred.notify.apply(deferred, arguments);
-                    }, function (timeout) {
-                        // new timeout started
-                        that.timeout = timeout;
+                    }, function (timer) {
+                        // new timer started
+                        that.timer = timer;
                     });
 
                 return this.deferred.promise;
