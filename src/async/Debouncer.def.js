@@ -34,6 +34,11 @@ $oop.postpone($utils, 'Debouncer', function () {
                     .isFunction(callback, "Invalid callback")
                     .isNumberOptional(delay, "Invalid delay");
 
+                this.elevateMethods(
+                    'onCall',
+                    'onTimerCancel',
+                    'onTimerStart');
+
                 /**
                  * Function to be de-bounced.
                  * @type {function}
@@ -89,29 +94,41 @@ $oop.postpone($utils, 'Debouncer', function () {
                     this.timer.clear();
                 }
 
-                var that = this,
-                    args = [this.callback, this.delay].concat(slice.call(arguments));
+                var args = [this.callback, this.delay].concat(slice.call(arguments));
 
                 $utils.Async.setTimeout.apply($utils.Async, args)
-                    .then(function () {
-                        // timer completed
-                        var deferred = that.deferred;
-
-                        // re-setting debouncer state
-                        that.deferred = undefined;
-                        that.timer = undefined;
-
-                        deferred.resolve.apply(deferred, arguments);
-                    }, function () {
-                        // timer got canceled due to new call to the debouncer
-                        var deferred = that.deferred;
-                        deferred.notify.apply(deferred, arguments);
-                    }, function (timer) {
-                        // new timer started
-                        that.timer = timer;
-                    });
+                    .then(this.onCall, this.onTimerCancel, this.onTimerStart);
 
                 return this.deferred.promise;
+            },
+
+            /**
+             * When the outgoing call was made.
+             */
+            onCall: function () {
+                var deferred = this.deferred;
+
+                // re-setting debouncer state
+                this.deferred = undefined;
+                this.timer = undefined;
+
+                deferred.resolve.apply(deferred, arguments);
+            },
+
+            /**
+             * When the timer gets canceled due to subsequent scheduling.
+             */
+            onTimerCancel: function () {
+                var deferred = this.deferred;
+                deferred.notify.apply(deferred, arguments);
+            },
+
+            /**
+             * When the timer starts.
+             * @param {$utils.Timeout} timeout
+             */
+            onTimerStart: function (timeout) {
+                this.timer = timeout;
             }
         });
 });
