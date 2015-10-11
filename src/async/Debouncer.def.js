@@ -78,7 +78,10 @@ $oop.postpone($utils, 'Debouncer', function () {
              * @returns {$utils.Debouncer}
              */
             stop: function () {
-                this.timer.clear();
+                var timer = this.timer;
+                if (timer) {
+                    timer.clear();
+                }
                 return this;
             },
 

@@ -3,6 +3,7 @@
 
     module("Debouncer");
 
+    // TODO: Move to Scheduler
     test("Instantiation", function () {
         throws(function () {
             $utils.Debouncer.create();
@@ -25,16 +26,16 @@
             }
         });
 
-        var debounced = $utils.Debouncer.create(callback, 10);
+        var debouncer = $utils.Debouncer.create(callback, 10);
 
         $utils.Debouncer.removeMocks();
 
-        strictEqual(debounced.callback, callback, "should set callback property");
-        equal(debounced.delay, 10, "should set delay property");
-        ok(debounced.hasOwnProperty('timer'), "should add timer property");
-        equal(typeof debounced.timer, 'undefined',
+        strictEqual(debouncer.callback, callback, "should set callback property");
+        equal(debouncer.delay, 10, "should set delay property");
+        ok(debouncer.hasOwnProperty('timer'), "should add timer property");
+        equal(typeof debouncer.timer, 'undefined',
             "should set timer property to undefined");
-        equal(typeof debounced.deferred, 'undefined',
+        equal(typeof debouncer.deferred, 'undefined',
             "should set deferred property to undefined");
     });
 
@@ -49,7 +50,62 @@
         equal(debouncer.delay, 5, "should set delay property");
     });
 
-    test("Debounced call", function (assert) {
+    test("Starting scheduler", function () {
+        function foo() {
+        }
+
+        $utils.Debouncer.addMocks({
+            start: function () {}
+        });
+
+        var debouncer = foo.toDebouncer(5);
+
+        $utils.Debouncer.removeMocks();
+
+        equal(typeof debouncer.deferred, 'undefined');
+        strictEqual(debouncer.start(), debouncer, "should be chainable");
+        ok(debouncer.deferred.isA($utils.Deferred), "should set deferred property");
+    });
+
+    test("Stopping scheduler", function () {
+        function foo() {
+        }
+
+        $utils.Debouncer.addMocks({
+            start: function () {}
+        });
+
+        var debouncer = foo.toDebouncer(5);
+
+        $utils.Debouncer.removeMocks();
+
+        equal(typeof debouncer.deferred, 'undefined');
+        strictEqual(debouncer.start(), debouncer, "should be chainable");
+        ok(debouncer.deferred.isA($utils.Deferred), "should set deferred property");
+    });
+
+    test("Stopping scheduler", function () {
+        expect(2);
+
+        function foo() {
+        }
+
+        var debouncer = foo.toDebouncer(5);
+
+        strictEqual(debouncer.stop(), debouncer, "should be chainable");
+
+        debouncer.timer = (10).toTimeout();
+
+        debouncer.timer.addMocks({
+            clear: function () {
+                ok(true, "should clear timeout");
+            }
+        });
+
+        debouncer.stop();
+    });
+
+    test("Scheduling call", function (assert) {
         expect(6);
 
         var result = {},
