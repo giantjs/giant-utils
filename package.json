@@ -13,11 +13,12 @@
     "type": "git",
     "url": "git@github.com:giantjs/giant-utils.git"
   },
-  "peerDependencies": {
-    "giant-assertion": "0.2.0",
-    "giant-oop": "0.2.0"
+  "engines" : {
+    "npm" : "^3.0.0"
   },
   "dependencies": {
+    "giant-assertion": "0.2.0",
+    "giant-oop": "0.2.0",
     "q": "^1.4.1"
   },
   "devDependencies": {
