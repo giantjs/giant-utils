@@ -10,7 +10,6 @@ $oop.postpone($utils, 'Debouncer', function () {
      * @name $utils.Debouncer.create
      * @function
      * @param {function} callback Function to debounce
-     * @param {number} [delay=0] Number of milliseconds between debounced calls
      * @returns {$utils.Debouncer}
      */
 
@@ -26,13 +25,10 @@ $oop.postpone($utils, 'Debouncer', function () {
         .addMethods(/** @lends $utils.Debouncer# */{
             /**
              * @param {function} callback Function to debounce
-             * @param {number} [delay=0] Number of milliseconds between debounced calls
              * @ignore
              */
-            init: function (callback, delay) {
-                $assertion
-                    .isFunction(callback, "Invalid callback")
-                    .isNumberOptional(delay, "Invalid delay");
+            init: function (callback) {
+                $assertion.isFunction(callback, "Invalid callback");
 
                 this.elevateMethods(
                     'onCall',
@@ -46,92 +42,77 @@ $oop.postpone($utils, 'Debouncer', function () {
                 this.callback = callback;
 
                 /**
-                 * @type {number}
-                 */
-                this.delay = delay || 0;
-
-                /**
                  * Timer instance representing the countdown to the next outgoing call.
                  * Undefined when the call has been already made.
                  * @type {$utils.Timeout}
+                 * @private
                  */
-                this.timer = undefined;
+                this._timer = undefined;
 
                 /**
                  * Allows the debouncer cycle to be controlled internally.
                  * @type {$utils.Deferred}
+                 * @private
                  */
-                this.deferred = undefined;
-
-                this.start();
+                this._deferred = undefined;
             },
 
             /**
-             * @returns {$utils.Debouncer}
-             */
-            start: function () {
-                this.deferred = $utils.Deferred.create();
-                return this;
-            },
-
-            /**
-             * @returns {$utils.Debouncer}
-             */
-            stop: function () {
-                var timer = this.timer;
-                if (timer) {
-                    timer.clear();
-                }
-                return this;
-            },
-
-            /**
-             * Schedules running the callback with the specified delay
+             * Starts te scheduler with the specified callback and delay.
+             * Will invoke callback within the specified time frame
              * unless a new debounced call is made in the meantime.
-             * TODO: Rename to something uniform.
              * @returns {$utils.Promise}
              */
-            schedule: function () {
-                if (this.timer) {
-                    // there is already a timer in progress
-                    this.timer.clear();
+            schedule: function (delay) {
+                arguments[0] = delay || 0;
+
+                if (!this._deferred) {
+                    this._deferred = $utils.Deferred.create();
                 }
 
-                var args = [this.callback, this.delay].concat(slice.call(arguments));
+                if (this._timer) {
+                    // existing timer must be cleared
+                    this._timer.clear();
+                }
+
+                var args = [this.callback].concat(slice.call(arguments));
 
                 $utils.Async.setTimeout.apply($utils.Async, args)
                     .then(this.onCall, this.onTimerCancel, this.onTimerStart);
 
-                return this.deferred.promise;
+                return this._deferred.promise;
             },
 
             /**
              * When the outgoing call was made.
+             * @ignore
              */
             onCall: function () {
-                var deferred = this.deferred;
+                var deferred = this._deferred;
 
                 // re-setting debouncer state
-                this.deferred = undefined;
-                this.timer = undefined;
+                this._deferred = undefined;
+                this._timer = undefined;
 
                 deferred.resolve.apply(deferred, arguments);
             },
 
             /**
              * When the timer gets canceled due to subsequent scheduling.
+             * @ignore
              */
             onTimerCancel: function () {
-                var deferred = this.deferred;
+                var deferred = this._deferred;
                 deferred.notify.apply(deferred, arguments);
             },
 
             /**
              * When the timer starts.
              * @param {$utils.Timeout} timeout
+             * @ignore
              */
             onTimerStart: function (timeout) {
-                this.timer = timeout;
+                this._timer = timeout;
             }
         });
 });

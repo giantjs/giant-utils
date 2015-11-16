@@ -8,7 +8,6 @@
  * @name $utils.Scheduler.create
  * @function
  * @param {function} callback
- * @param {number} [delay=0]
  * @returns {$utils.Scheduler}
  */
 
@@ -18,34 +17,17 @@
  */
 
 /**
- * @name $utils.Scheduler#delay
- * @type {number}
- */
-
-/**
- * @name $utils.Scheduler#timer
+ * @name $utils.Scheduler#_timer
  * @type {$utils.Timeout}
  */
 
 /**
- * @name $utils.Scheduler#deferred
+ * @name $utils.Scheduler#_deferred
  * @type {$utils.Deferred}
- */
-
-/**
- * @name $utils.Scheduler#start
- * @function
- * @returns {$utils.Scheduler}
- */
-
-/**
- * @name $utils.Scheduler#stop
- * @function
- * @returns {$utils.Scheduler}
  */
 
 /**
  * @name $utils.Scheduler#schedule
  * @function
- * @returns {$utils.Scheduler}
+ * @returns {$utils.Promise}
  */
