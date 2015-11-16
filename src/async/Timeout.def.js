@@ -35,7 +35,7 @@ $oop.postpone($utils, 'Timeout', function () {
              * @ignore
              */
             init: function (timeoutId) {
-                $assertion.isNumber(timeoutId, "Invalud timeout ID");
+                $assertion.isNumber(timeoutId, "Invalid timeout ID");
 
                 /**
                  * ID associated with timeout. Comes from Async.setTimeout or window.setTimeout.
