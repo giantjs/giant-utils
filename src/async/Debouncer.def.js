@@ -123,11 +123,10 @@ $oop.postpone($utils, 'Debouncer', function () {
     $oop.extendBuiltIn(Function.prototype, /** @lends Function# */{
         /**
          * Converts `Function` to `Debouncer` instance.
-         * @param {number} [delay=0]
          * @returns {$utils.Debouncer}
          */
-        toDebouncer: function (delay) {
-            return $utils.Debouncer.create(this.valueOf(), delay);
+        toDebouncer: function () {
+            return $utils.Debouncer.create(this.valueOf());
         }
     });
 }());
