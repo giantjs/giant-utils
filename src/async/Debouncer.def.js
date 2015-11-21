@@ -3,8 +3,7 @@ $oop.postpone($utils, 'Debouncer', function () {
     "use strict";
 
     var base = $oop.Base,
-        self = base.extend(),
-        slice = Array.prototype.slice;
+        self = base.extend();
 
     /**
      * @name $utils.Debouncer.create
@@ -31,7 +30,7 @@ $oop.postpone($utils, 'Debouncer', function () {
                 $assertion.isFunction(callback, "Invalid callback");
 
                 this.elevateMethods(
-                    'onCall',
+                    'onTimerEnd',
                     'onTimerCancel',
                     'onTimerStart');
 
@@ -75,26 +74,25 @@ $oop.postpone($utils, 'Debouncer', function () {
                     this._timer.clear();
                 }
 
-                var args = [this.callback].concat(slice.call(arguments));
-
-                $utils.Async.setTimeout.apply($utils.Async, args)
-                    .then(this.onCall, this.onTimerCancel, this.onTimerStart);
+                $utils.Async.setTimeout.apply($utils.Async, arguments)
+                    .then(this.onTimerEnd, this.onTimerCancel, this.onTimerStart);
 
                 return this._deferred.promise;
             },
 
             /**
-             * When the outgoing call was made.
+             * When the timer expires.
              * @ignore
              */
-            onCall: function () {
+            onTimerEnd: function () {
                 var deferred = this._deferred;
 
                 // re-setting debouncer state
                 this._deferred = undefined;
                 this._timer = undefined;
 
-                deferred.resolve.apply(deferred, arguments);
+                // running callback & resolving promise with result
+                deferred.resolve(this.callback.apply(null, arguments));
             },
 
             /**

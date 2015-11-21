@@ -34,53 +34,52 @@ $oop.postpone($utils, 'Async', function () {
         })
         .addMethods(/** @lends $utils.Async */{
             /**
-             * Runs a function asynchronously.
-             * Similar to window.setTimeout, except that it returns a promise
-             * that is resolved when the timeout completes or is rejected when the
-             * timeout is canceled.
-             * @param {function} callback
+             * Sets up a timeout timer with the specified delay.
+             * Similar to window.setTimeout, except that instead of taking a callback
+             * it returns a promise which is resolved when the timeout completes
+             * or is rejected when the timeout gets canceled.
              * @param {number} delay
-             * @returns {$utils.Promise} Resolution receives callback return value,
-             * progress receives Timeout instance.
+             * @returns {$utils.Promise} Resolution receives original arguments except delay,
+             * progress receives same plus Timeout instance as first argument.
              * @see window.setTimeout
              * @see $utils.Timeout
              */
-            setTimeout: function (callback, delay) {
-                var args = [timeoutCallback].concat(slice.call(arguments, 1)),
-                    timeout = this._setTimeoutProxy.apply(this, args).toTimeout(),
+            setTimeout: function (delay) {
+                var proxyArgs = [timeoutCallback].concat(slice.call(arguments)),
+                    timeout = this._setTimeoutProxy.apply(this, proxyArgs).toTimeout(),
+                    resolveArgs = slice.call(arguments, 1),
+                    notifyArgs = [timeout].concat(resolveArgs),
                     deferred = timeout.deferred;
 
                 function timeoutCallback() {
-                    // invoking callback and resolving promise with return value
-                    deferred.resolve(callback.apply(null, arguments));
+                    deferred.resolve.apply(deferred, resolveArgs);
                 }
 
-                deferred.notify(timeout);
+                deferred.notify.apply(deferred, notifyArgs);
 
                 return deferred.promise;
             },
 
             /**
-             * Runs function asynchronously, at each delay milliseconds until cleared.
-             * Similar to window.setInterval, except that it returns a promise
-             * that is rejected when the interval timer is cleared, and is notified
-             * at each interval cycle.
-             * @param {function} callback
+             * Sets up an interval timer with the specified delay.
+             * Similar to window.setInterval, except that instead of taking a callback
+             * it returns a promise which is rejected when the interval timer is cleared,
+             * and is notified of each interval cycle.
              * @param {number} delay
              * @returns {$utils.Promise} Rejection receives no arguments, progress
-             * receives callback return value.
+             * receives Interval instance, plus original arguments except delay.
              */
-            setInterval: function (callback, delay) {
-                var args = [intervalCallback].concat(slice.call(arguments, 1)),
-                    interval = this._setIntervalProxy.apply(this, args).toInterval(),
+            setInterval: function (delay) {
+                var proxyArgs = [intervalCallback].concat(slice.call(arguments)),
+                    interval = this._setIntervalProxy.apply(this, proxyArgs).toInterval(),
+                    notifyArgs = [interval].concat(slice.call(arguments, 1)),
                     deferred = interval.deferred;
 
                 function intervalCallback() {
-                    // invoking callback and resolving promise with return value
-                    deferred.notify(interval, callback.apply(null, arguments));
+                    deferred.notify.apply(deferred, notifyArgs);
                 }
 
-                deferred.notify(interval);
+                deferred.notify.apply(deferred, notifyArgs);
 
                 return deferred.promise;
             }

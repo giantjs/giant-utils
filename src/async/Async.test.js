@@ -4,15 +4,9 @@
     module("Async");
 
     test("SetTimeout", function (assert) {
-        expect(4);
+        expect(3);
 
-        var result = {},
-            done = assert.async();
-
-        function foo() {
-            equal(arguments[0], 'bar', "should pass callback arguments");
-            return result;
-        }
+        var done = assert.async();
 
         $utils.Async.addMocks({
             _setTimeoutProxy: function () {
@@ -21,9 +15,9 @@
             }
         });
 
-        $utils.Async.setTimeout(foo, 10, 'bar')
-            .then(function (value) {
-                strictEqual(value, result, "should resolve promise with return value");
+        $utils.Async.setTimeout(10, 'bar')
+            .then(function () {
+                equal(arguments[0], 'bar', "should resolve promise with arguments passed");
                 $utils.Async.removeMocks();
                 done();
             }, null, function (value) {
@@ -36,10 +30,7 @@
 
         var done = assert.async();
 
-        function foo() {
-        }
-
-        $utils.Async.setTimeout(foo, 10)
+        $utils.Async.setTimeout(10)
             .then(null, function () {
                 ok(true, "should reject promise");
                 done();
@@ -55,12 +46,6 @@
             i = 0,
             done = assert.async();
 
-        function foo() {
-            // will be hit 4x
-            equal(arguments[0], 'bar', "should pass callback arguments");
-            return i++;
-        }
-
         $utils.Async.addMocks({
             _setIntervalProxy: function () {
                 equal(arguments[2], 'bar', "should pass extra params to setTimeout proxy");
@@ -68,19 +53,21 @@
             }
         });
 
-        $utils.Async.setInterval(foo, 10, 'bar')
+        $utils.Async.setInterval(10, 'bar')
             .then(null, function () {
                 ok(true, "should reject promise");
 
-                deepEqual(progressValues, [undefined, 0, 1, 2],
+                deepEqual(progressValues, [0, 1, 2],
                     "should go through progress stages");
 
                 $utils.Async.removeMocks();
                 done();
-            }, function (interval, value) {
-                progressValues.push(value);
+            }, function (interval) {
+                // will be hit 4x
+                equal(arguments[1], 'bar', "should pass callback arguments");
+                progressValues.push(i++);
 
-                if (value >= 2) {
+                if (i === 3) {
                     interval.clear();
                 }
             });
