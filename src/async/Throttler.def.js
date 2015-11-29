@@ -13,7 +13,8 @@ $oop.postpone($utils, 'Throttler', function () {
      */
 
     /**
-     * Throttles a function call. The original function is expected to return a promise.
+     * Throttles a function call.
+     * Throttling allows only one call to go through in a specified interval.
      * @class
      * @extends $oop.Base
      * @implements $utils.Scheduler

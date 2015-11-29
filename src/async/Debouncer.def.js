@@ -13,7 +13,9 @@ $oop.postpone($utils, 'Debouncer', function () {
      */
 
     /**
-     * De-bounces a function. Calls to the specified function via .schedule will be ignored
+     * De-bounces a function.
+     * De-bouncing ensures that calls are separated by at least a specified time interval.
+     * Calls to the specified function via .schedule will be ignored
      * and replaced by subsequent calls being made within the specified time frame.
      * When no new calls were made in the specified time frame, the last call will go through.
      * @class
