@@ -36,7 +36,7 @@
     });
 
     test("Scheduling call", function (assert) {
-        expect(6);
+        expect(7);
 
         var result = {},
             done = assert.async();
@@ -52,6 +52,8 @@
 
         debouncer.schedule(10, 'hello')
             .then(null, null, function () {
+                equal(typeof debouncer._timer, 'undefined',
+                    "should clear timeout when skipping call");
                 ok(true, "should notify promise for skipped call");
             });
 

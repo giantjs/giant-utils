@@ -101,6 +101,11 @@ $oop.postpone($utils, 'Debouncer', function () {
              */
             onTimerCancel: function () {
                 var deferred = this._deferred;
+
+                // re-setting debouncer state
+                this._timer = undefined;
+
+                // notifying promise about cancellation
                 deferred.notify.apply(deferred, arguments);
             },
 
