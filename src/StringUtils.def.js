@@ -11,7 +11,7 @@ $oop.postpone($utils, 'StringUtils', function () {
     $utils.StringUtils = self
         .addMethods(/** @lends $utils.StringUtils */{
             /**
-             * @param {number} value
+             * @param {number|string} value
              * @param {number} targetLength
              * @returns {string}
              */
