@@ -1,13 +1,13 @@
 {
   "name": "giant-utils",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Utils module for Giant",
   "keywords": [
     "utils",
     "string"
   ],
   "author": "Dan Stocker <dan@kwaia.com>",
-  "copyright": "Copyright (c) 2015 Dan Stocker",
+  "copyright": "Copyright (c) 2015-2016 Dan Stocker",
   "license": "MIT",
   "repository": {
     "type": "git",
